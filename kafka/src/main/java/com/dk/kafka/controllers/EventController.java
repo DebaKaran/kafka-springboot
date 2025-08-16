@@ -21,12 +21,11 @@ public class EventController {
         try {
             for(int i = 0; i < 1000; i++) {
                 publisher.sendMessageToTopic(message);
-                return ResponseEntity.ok("Message published successfully..");
             }
+            return ResponseEntity.ok("Message published successfully..");
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .build();
         }
-        return null;
     }
 }
