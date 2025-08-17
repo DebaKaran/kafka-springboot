@@ -11,7 +11,9 @@ spring:
       fail-fast: true
     producer:
       bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:29092}
-
+  docker:
+    compose:
+      location: kafka/compose.yaml
 
 kafka:   # <-- must be top-level, not inside spring.kafka
   topics:
