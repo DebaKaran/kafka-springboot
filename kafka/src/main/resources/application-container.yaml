@@ -1,0 +1,6 @@
+spring:
+  config:
+    activate:
+      on-profile: container
+  kafka:
+    bootstrap-servers: kafka:29092

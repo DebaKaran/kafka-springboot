@@ -1,8 +1,23 @@
 server:
   port: 9191
+
 spring:
   application:
     name: kafka
   kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:29092}
+    admin:
+      auto-create: true
+      fail-fast: true
     producer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:29092}
+
+
+kafka:   # <-- must be top-level, not inside spring.kafka
+  topics:
+    - name: test-topic
+      partitions: 3
+      replicationFactor: 1
+    - name: another-topic
+      partitions: 2
+      replicationFactor: 1
