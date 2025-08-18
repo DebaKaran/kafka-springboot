@@ -9,10 +9,20 @@ spring:
     consumer:
       group-id: test-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: com.dk.kafkaconsumer.dtos
 
 app:
   kafka:
-    topic: test-topic
-    group-id: test-group
+    consumers:
+      - topic: test-topic
+        group-id: test-group
+        alias: test
+      - topic: customer-topic
+        group-id: customer-group
+        alias: customer
 

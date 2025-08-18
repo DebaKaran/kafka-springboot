@@ -10,7 +10,13 @@ spring:
       auto-create: true
       fail-fast: true
     producer:
-      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:29092}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all   # ensures reliability (producer waits for all replicas to ack)
+      retries: 3  # retry sending if transient failures
+      properties:
+        linger.ms: 10     # small batching delay for efficiency
+        batch.size: 16384 # batch size in bytes
   docker:
     compose:
       location: kafka/compose.yaml
@@ -18,8 +24,10 @@ spring:
 kafka:   # <-- must be top-level, not inside spring.kafka
   topics:
     - name: test-topic
+      alias: test
       partitions: 3
       replicationFactor: 1
-    - name: another-topic
+    - name: customer-topic
+      alias: customer
       partitions: 2
       replicationFactor: 1

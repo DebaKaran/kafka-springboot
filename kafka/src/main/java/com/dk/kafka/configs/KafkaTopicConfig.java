@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 @Configuration
 public class KafkaTopicConfig {
+
     private final KafkaTopicsProperties properties;
 
     public KafkaTopicConfig(KafkaTopicsProperties properties) {
@@ -33,4 +34,6 @@ public class KafkaTopicConfig {
             kafkaAdmin.initialize();
         };
     }
+
+
 }
