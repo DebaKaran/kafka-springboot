@@ -1,30 +1,21 @@
 package com.dk.kafkaconsumer.services;
 
+import com.dk.kafkaconsumer.configs.KafkaConsumerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
 @Service
 public class KafkaMessageListner {
 
-    Logger logger = LoggerFactory.getLogger(KafkaMessageListner.class);
+    Logger logger = LoggerFactory.getLogger(KafkaConsumerConfig.class);
 
-    // Consumer 1
-    @KafkaListener(topics = "test-topic", groupId = "test-group")
-    public void consumeGroup1(String message) {
-        logger.info("Consumer1 received: {}", message);
+    @KafkaListener(topics = "${app.kafka.topic}", groupId = "${app.kafka.group-id:test-group}")
+    public void consume(String message, @Header(KafkaHeaders.RECEIVED_PARTITION) int partition) {
+        logger.info("Consumer received: {} from partition {}", message, partition);
     }
 
-    // Consumer 2
-    @KafkaListener(topics = "test-topic", groupId = "test-group")
-    public void consumeGroup2(String message) {
-        logger.info("Consumer2 received: {}", message);
-    }
-
-    // Consumer 3
-    @KafkaListener(topics = "test-topic", groupId = "test-group")
-    public void consumeGroup3(String message) {
-        logger.info("Consumer3 received: {}", message);
-    }
 }
