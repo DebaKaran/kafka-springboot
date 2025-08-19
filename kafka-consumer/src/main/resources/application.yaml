@@ -6,6 +6,10 @@ spring:
     name: kafka-consumer
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:29092}
+    # Needed because the consumer app internally produces messages to retry/DLT topics
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
       group-id: test-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -14,7 +18,10 @@ spring:
         spring:
           json:
             trusted:
-              packages: com.dk.kafkaconsumer.dtos
+              packages: com.dk.kafka.dtos
+            value:
+              default:
+                type: com.dk.kafka.dtos.Customer
 
 app:
   kafka:

@@ -1,4 +1,4 @@
-package com.dk.kafkaconsumer.configs;
+package com.dk.kafka.configs;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

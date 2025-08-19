@@ -1,4 +1,4 @@
-package com.dk.kafkaconsumer.configs;
+package com.dk.kafka.configs;
 
 import org.apache.kafka.clients.admin.AdminClient;
 import org.slf4j.Logger;

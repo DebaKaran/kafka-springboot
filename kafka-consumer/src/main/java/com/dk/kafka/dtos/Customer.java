@@ -1,4 +1,4 @@
-package com.dk.kafkaconsumer.dtos;
+package com.dk.kafka.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
