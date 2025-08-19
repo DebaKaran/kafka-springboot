@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
-import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.retry.annotation.Backoff;
@@ -17,7 +16,7 @@ public class CustomerConsumer {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerConsumer.class);
 
-    @RetryableTopic(autoCreateTopics = "true", attempts = "4", backoff = @Backoff(delay = 1000L))
+    @RetryableTopic(autoCreateTopics = "true")
     @KafkaListener(
             topics = "#{@consumerDefinitions['customer'].topic}",
             groupId = "#{@consumerDefinitions['customer'].groupId}",

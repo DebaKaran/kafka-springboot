@@ -32,4 +32,10 @@ app:
       - topic: customer-topic
         group-id: customer-group
         alias: customer
+    retry:
+      initial-interval: 1000 # initial delay in ms
+      multiplier: 2.0  # exponential multiplier
+      max-interval: 10000   # max delay in ms
+      max-attempts: 4             # 1 original + 3 retry topics
+      # randomized: true            # enable jitter
 

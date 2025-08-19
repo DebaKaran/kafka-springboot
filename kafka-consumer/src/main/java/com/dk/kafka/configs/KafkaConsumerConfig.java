@@ -9,6 +9,9 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.KafkaAdmin;
+import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.util.backoff.BackOff;
+import org.springframework.util.backoff.ExponentialBackOff;
 
 import java.util.Collections;
 import java.util.Map;
@@ -24,18 +27,20 @@ public class KafkaConsumerConfig {
     public ConcurrentKafkaListenerContainerFactory<String, String> testFactory(
             ConsumerFactory<String, String> consumerFactory,
             KafkaAdmin kafkaAdmin,
-            KafkaConsumersProperties props) {
+            KafkaConsumersProperties props,
+            ExponentialBackOff testBackOff) {
 
-        return createFactory("test", consumerFactory, kafkaAdmin, props);
+        return createFactory("test", consumerFactory, kafkaAdmin, props, testBackOff);
     }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, String> customerFactory(
             ConsumerFactory<String, String> consumerFactory,
             KafkaAdmin kafkaAdmin,
-            KafkaConsumersProperties props) {
+            KafkaConsumersProperties props,
+            ExponentialBackOff customBackOff) {
 
-        return createFactory("customer", consumerFactory, kafkaAdmin, props);
+        return createFactory("customer", consumerFactory, kafkaAdmin, props, customBackOff);
     }
 
     @Bean
@@ -48,7 +53,8 @@ public class KafkaConsumerConfig {
             String alias,
             ConsumerFactory<String, String> consumerFactory,
             KafkaAdmin kafkaAdmin,
-            KafkaConsumersProperties props) {
+            KafkaConsumersProperties props,
+            BackOff backOff) {
 
         KafkaConsumersProperties.ConsumerDefinition def = props.getConsumerDefinationBasedOnAlias(alias);
 
@@ -68,6 +74,8 @@ public class KafkaConsumerConfig {
         factory.setConsumerFactory(consumerFactory);
         factory.setConcurrency(partitions);
 
+        // Add error handler with the injected backoff
+        factory.setCommonErrorHandler(new DefaultErrorHandler(backOff));
         logger.info("Created listener factory for alias={} topic={} groupId={} partitions={}",
                 def.getAlias(), def.getTopic(), def.getGroupId(), partitions);
 
