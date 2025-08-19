@@ -8,7 +8,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,7 +15,7 @@ public class CustomerConsumer {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerConsumer.class);
 
-    @RetryableTopic(autoCreateTopics = "true")
+    @RetryableTopic(autoCreateTopics = "true", exclude = {IllegalArgumentException.class})
     @KafkaListener(
             topics = "#{@consumerDefinitions['customer'].topic}",
             groupId = "#{@consumerDefinitions['customer'].groupId}",
@@ -41,7 +40,10 @@ public class CustomerConsumer {
 
             logger.info("Consumed customer with id: {} from partition {}", customer.getId(), partition);
 
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+        catch (Exception e) {
             logger.error("Failed to process customer {}. Will retry or send to DLT.", customer.getId(), e);
             throw new RuntimeException("Processing failed for customer ID: " + customer.getId(), e);
         }
